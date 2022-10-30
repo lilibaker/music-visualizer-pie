@@ -6,7 +6,7 @@ const int GREEN_LED = 11;
 
 // read serial input
 const int BUFFER_SIZE = 2;
-char buf[BUFFER_SIZE};
+char buf[BUFFER_SIZE];
 int audio_data = 0;
 
 void setup() {
@@ -34,12 +34,12 @@ void read_audio(){
 
 void determine_light(int audio_data){         // change type
   // if input of certain amplitude, light red
-  if (audio_data != 0){
+  if (audio_data > 20){
     light_on(RED_LED);
   }
 
   // if input of certain amplitude, light green
-  if (audio_data != 0){
+  if (audio_data > 20){
     light_on(GREEN_LED);
   }
 }
