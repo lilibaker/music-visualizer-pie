@@ -9,9 +9,9 @@ BUFFER = 256
 
 if __name__ == "__main__":
     try:
-        port, audiofile = sys.argv[1]
+        port, audiofile = sys.argv[1:3]
     except ValueError:
-        print("Error: Use like python microphone.py PORT, WAV_FILE")
+        print("Error: Use like python microphone.py PORT WAV_FILE")
         sys.exit(1)
 
     with wave.open(audiofile, "rb") as wav:

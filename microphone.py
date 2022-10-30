@@ -15,13 +15,14 @@ BUFFER = 256
 if __name__ == "__main__":
     try:
         port = sys.argv[1]
-    except ValueError:
+    except (ValueError, IndexError):
         print("Error: Use like python microphone.py ARDUINO_PORT")
         sys.exit(1)
 
-    data = []
+    data = b''
     def listen(in_data, _, __, ___):
-        data.extend(in_data)
+        global data
+        data = data + in_data
         return (None, pyaudio.paContinue)
 
     pA = pyaudio.PyAudio()
@@ -33,13 +34,12 @@ if __name__ == "__main__":
                     stream_callback=listen)
     stream.start_stream()
 
-    with serial.Serial(arduino, BAUD) as ser:
+    with serial.Serial(port, BAUD) as ser:
         i = 0
         while True:
             n = ser.write(data[i:i+BUFFER])
-
             i += n
-            if n == 0:
-                break
 
-    pA.terminate()
+    #stream.stop_stream()
+    #stream.close()
+    #pA.terminate()
