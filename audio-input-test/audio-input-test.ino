@@ -29,17 +29,18 @@ void read_audio(){
     audio_data = Serial.readBytes(buf, BUFFER_SIZE);  
   }
   
-  determine_light(audio_data);
+  determine_light(buf);
 }
 
-void determine_light(int audio_data){         // change type
+void determine_light(char audio_data){         // change type
+  audio_data = int(audio_data);
   // if input of certain amplitude, light red
-  if (audio_data > 20){
+  if (audio_data != 0){
     light_on(RED_LED);
   }
 
   // if input of certain amplitude, light green
-  if (audio_data > 20){
+  if (audio_data != 0){
     light_on(GREEN_LED);
   }
 }
