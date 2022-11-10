@@ -1,5 +1,6 @@
 #include <Adafruit_MotorShield.h>
 rad_x = 3; // cm
+rad_z = 3; // cm
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_StepperMotor *ZMotor = AFMS.getStepper(200, 1)
 Adafruit_StepperMotor *XMotor = AFMS.getStepper(200, 2)
@@ -44,7 +45,8 @@ void translate_coordinate(int x_target, int z_target){
   x_amount = x_target / (2 * pi * rad_x);
   z_amount = z_target / (2 * pi * rad_z);
 }
- 
+
+// might have to go one step at a time in order to have them move at the same time
 void move_both_motors(int x_amount, int z_amount){
   update_speeds(x_amount, z_amount);
   XMotor->step(x_amount, FORWARD, DOUBLE);
