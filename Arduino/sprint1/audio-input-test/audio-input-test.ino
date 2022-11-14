@@ -1,7 +1,7 @@
 // Testing audio input
 
 // set up pins
-const int RED_LED = 12;
+const int RED_LED = 10;
 const int GREEN_LED = 11;
 
 // read serial input
@@ -20,33 +20,37 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   read_audio();
+
 }
 
 void read_audio(){
   // get input
+  
   if (Serial.available() > 0){
     // change to reflect format of data
     audio_data = Serial.readBytes(buf, BUFFER_SIZE);  
   }
   
-  determine_light(buf);
+  determine_light();
 }
 
-void determine_light(char audio_data){         // change type
-  audio_data = int(audio_data);
+void determine_light(){         // change type
+  //audio_data = (int)((int *)audio_data);
+  int data = (buf[1] << 8) + buf[0];
+  int brightness = map(data, -pow(2, 8), pow(2, 8), 0, 255);
   // if input of certain amplitude, light red
-  if (audio_data != 0){
-    light_on(RED_LED);
+  if (data != 0){
+    light_on(RED_LED, brightness);
   }
 
   // if input of certain amplitude, light green
-  if (audio_data != 0){
-    light_on(GREEN_LED);
+  if (data != 0){
+    light_on(GREEN_LED, brightness);
   }
 }
 
-void light_on(int led){
-   digitalWrite(led, HIGH);
-   delay(500);
-   digitalWrite(led, LOW);
+void light_on(int led, int brightness){
+   analogWrite(led, brightness);
+//   delay(500);
+//   analogWrite(led, brightness);
 }
