@@ -41,5 +41,6 @@ if __name__ == "__main__":
         q  = fq / 2000
         pts.extend(list(draw(Ro, Ri, q)))
 
-    for pt in pts:
-        ser.write(f"{round(pt['x'], 2)},{round(pt['y'], 2)}")
+    with serial.Serial(port, BAUD) as ser:
+        for pt in pts:
+            ser.write(f"{round(pt['x'], 2)},{round(pt['y'], 2)}".encode())
