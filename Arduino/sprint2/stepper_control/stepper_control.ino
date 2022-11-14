@@ -1,9 +1,9 @@
 #include <Adafruit_MotorShield.h>
-rad_x = 3; // cm
-rad_y = 3; // cm
+int rad_x = 3; // cm
+int rad_y = 3; // cm
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-Adafruit_StepperMotor *YMotor = AFMS.getStepper(200, 1)
-Adafruit_StepperMotor * XMotor = AFMS.getStepper(200, 2)
+Adafruit_StepperMotor *YMotor = AFMS.getStepper(200, 1);
+Adafruit_StepperMotor * XMotor = AFMS.getStepper(200, 2);
 
 // previous positions (angle or cartesian?); not previously used
 int x_previous = 0;
@@ -14,11 +14,6 @@ int y_amount = 0;
 
 void setup() {
   Serial.begin(9600);
-
-  if (!AFMS.begin()) { // if cannot connect to shield
-    Serial.printn("No Motor Shield found")
-    while (1);
-  }
 
   Serial.println("Motor Shield found");
   YMotor->setSpeed(10); // revolution per minute
@@ -31,7 +26,7 @@ void setup() {
 void loop() {
   //  while(Serial.avalable() == 0){
   //  }
-
+  draw(500, 500);
 }
 
 void draw(int x_target, int y_target) {
@@ -50,8 +45,8 @@ void translate_coordinate(int x_target, int y_target) {
   y_previous = y_target;
   
   // translate to step amounts
-  x_amount = x_target / (2 * pi * rad_x) * 200;
-  y_amount = y_target / (2 * pi * rad_y) * 200;
+  x_amount = x_target / (2 * PI * rad_x) * 200;
+  y_amount = y_target / (2 * PI * rad_y) * 200;
 }
 
 // might have to go one step at a time in order to have them move at the same time
