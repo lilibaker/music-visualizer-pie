@@ -14,12 +14,8 @@ int y_amount = 0;
 
 void setup() {
   Serial.begin(9600);
-
-  Serial.println("Motor Shield found");
   YMotor->setSpeed(10); // revolution per minute
   XMotor->setSpeed(10);
-
-  Serial.println("Enter X value: ");
 
 }
 
@@ -30,6 +26,7 @@ void loop() {
 }
 
 void draw(int x_target, int y_target) {
+  // Serial.print("here");
   translate_coordinate(x_target, y_target);
   //  update_speeds(x_amount, y_amount);
   move_both_motors(x_amount, y_amount);
@@ -37,12 +34,12 @@ void draw(int x_target, int y_target) {
 
 void translate_coordinate(int x_target, int y_target) {
   // define target coordinate in terms of previous coordinate
-  x_target = x_target - x_previous;
-  y_target = y_target - y_previous;
+  // x_target = x_target - x_previous;
+  // y_target = y_target - y_previous;
   
-  // update previous coordinate
-  x_previous = x_target;
-  y_previous = y_target;
+  // // update previous coordinate
+  // x_previous = x_target;
+  // y_previous = y_target;
   
   // translate to step amounts
   x_amount = x_target / (2 * PI * rad_x) * 200;
@@ -51,7 +48,8 @@ void translate_coordinate(int x_target, int y_target) {
 
 // might have to go one step at a time in order to have them move at the same time
 void move_both_motors(int x_amount, int y_amount) {
-  update_speeds(x_amount, y_amount);
+  //update_speeds(x_amount, y_amount);
+  Serial.print("here");
   //  XMotor->step(x_amount, FORWARD, DOUBLE);
   //  YMotor->step(y_amount, FORWARD, DOUBLE);
 
@@ -68,7 +66,9 @@ void move_both_motors(int x_amount, int y_amount) {
     // if y distance is the greatest, it should move max/min times
     y_steps = max_amount / min_amount;
   }
-
+  Serial.print(min_amount);
+  Serial.print(" ");
+  Serial.println(max_amount);
   // for min_amount times, move the determined amount of steps
   for (int i = 0; i < min_amount; i++) {
     XMotor->step(x_steps, FORWARD, MICROSTEP);
@@ -83,6 +83,6 @@ void move_both_motors(int x_amount, int y_amount) {
 
 // might need to set speeds for arriving at same time
 void update_speeds(int x_amount, int y_amount) {
-  XMotor->setSpeed(x_amount / (x_amount + y_amount));
-  YMotor->setSpeed(y_amount / (x_amount + y_amount));
+  //XMotor->setSpeed(x_amount / (x_amount + y_amount));
+  //YMotor->setSpeed(y_amount / (x_amount + y_amount));
 }

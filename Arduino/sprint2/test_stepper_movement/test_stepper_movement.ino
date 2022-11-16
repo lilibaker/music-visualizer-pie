@@ -23,11 +23,15 @@ void setup() {
 }
 
 void loop() {
-  while(Serial.available() == 0){
-  }
 
-  int X = Serial.parseInt(); // X coordination
+  //int X = Serial.parseInt(); // X coordination
+  int X = 300;
   int step_x = X / (2 * PI * rad_x); 
-  XMotor->step(step_x, FORWARD, DOUBLE);
+  // XMotor->step(step_x, FORWARD, DOUBLE);
   //ZMotor->step(step_z, FORWARD, DOUBLE);
+  for (int i = 0; i < 500; i++) {
+    XMotor->step(2.4, FORWARD, MICROSTEP);
+    ZMotor->step(2, FORWARD, MICROSTEP);
+    Serial.println("step");
+  }
 }
