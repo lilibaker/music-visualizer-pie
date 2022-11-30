@@ -1,6 +1,7 @@
 PyAudio==0.2.12
 pyserial==3.5
+pytube==12.1.0
 spotdl==4.0.5
 spotify-uri==1.0.3
 spotipy==2.21.0
-pytube==12.1.0
+ttkthemes==3.2.2
