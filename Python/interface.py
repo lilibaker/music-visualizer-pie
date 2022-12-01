@@ -4,10 +4,6 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import spotify_uri
-from spotdl import __main__ as start # To initialize
-# from spotdl.search.songObj import SongObj
-# from pytube import YouTube
 
 sp = spotipy.Spotify(
         auth_manager=SpotifyClientCredentials(
@@ -18,6 +14,8 @@ sp = spotipy.Spotify(
 
 # define global veriables
 RESULTS = 0
+features = ""
+
 
 # set up window
 root = ThemedTk(theme="breeze")
@@ -48,7 +46,7 @@ def show():
 
 def draw_spiro():
     print("value is: " + clicked.get() + ".mp3")
-    os.system("prerecorded.py COM5" + clicked.get() + ".mp3")
+    os.system("python3 prerecorded.py COM5" + clicked.get() + ".mp3")
     
 
 #dropdown options
@@ -82,20 +80,22 @@ def displayArtists():
     
     artistNames.config(text = artists)
 
-def downloadMusic():
+def getFeatures():
     id = int(artistID.get(1.0, "end-1c"))
-    uri = RESULTS["tracks"]["items"][id]["uri"]
-    url = spotify_uri.formatOpenURL(uri)
-    print(url)
-    # song = SongObj.from_url(url)
-    # youtube_url = song.get_youtube_link()
-    # yt = YouTube(youtube_url)
-    # yts = yt.streams.get_audio_only()
-    # fname = yts.download('~/music')
-    # print(fname)
+    id = RESULTS["tracks"]["items"][id]["id"]
+    results = sp.audio_features(id)
+    print(results)
+    global features
+    for feature in ["danceability", "key", "loudness", "mode",\
+        "acousticness", "instrumentalness", "liveness", "valence", \
+        "tempo"]:
+        features += f" {results[0][feature]}"
+    print(features)
 
-    # other option is just to use os system
-    os.system("spotdl " + url)
+def visualizeMusic(features):
+    # run prerecorded with features
+    return
+
 
 # song name instructions
 songInstructions = ttk.Label(frmMain, 
@@ -126,7 +126,7 @@ artistNames.grid(row=9, column = 0, pady = 7)
 artistID = tk.Text(frmMain, height=5, width=40)
 artistID.grid(row=10, column = 0, pady = 7)
 # button to search name of song
-download = ttk.Button(frmMain, text="Done", command=downloadMusic)
+download = ttk.Button(frmMain, text="Done", command=getFeatures)
 download.grid(row=11, column = 0, pady = 7)
 
 
