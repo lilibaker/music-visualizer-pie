@@ -90,7 +90,7 @@ def getFeatures():
     for feature in ["danceability", "key", "loudness", "mode",\
         "acousticness", "instrumentalness", "liveness", "valence", \
         "tempo"]:
-        features.append(int(results[0][feature]))
+        features.append(float(results[0][feature]))
     visualizeMusic(features)
 
 def visualizeMusic(features):

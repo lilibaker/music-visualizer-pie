@@ -8,9 +8,13 @@ from pprint import pprint
 BAUD = 9600
 
 def draw(Ri, Ro, q, tmax=100, tstep=10):
+    min_r = min(Ri, Ro)
+    Ro = max(Ri, Ro)
+    Ri = min_r
     p = (Ro - Ri) / 2
     q = (Ro - p) * q + p
     R = Ri + p + q
+    q = min(0.1, q)
 
     x = lambda t: (R - q)*np.cos(t) + p*np.cos(t*(R - q)/q)
     y = lambda t: (R - q)*np.sin(t) - p*np.sin(t*(R - q)/q)
