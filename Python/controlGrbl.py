@@ -8,6 +8,7 @@ BAUD_RATE = 115200
 def send_wake_up(ser):
     # Wake up
     # Hit enter a few times to wake the Printrbot
+    print("writing enter")
     ser.write(str.encode("\r\n\r\n"))
     time.sleep(2)   # Wait for Printrbot to initialize
     ser.flushInput()  # Flush startup text in serial input
@@ -26,7 +27,7 @@ def wait_for_movement_completion(ser,line):
             ser.reset_input_buffer()
             command = str.encode('?' + '\n')
             ser.write(command)
-            grbl_out = ser.readline() 
+            grbl_out = ser.readline()
             grbl_response = grbl_out.strip().decode('utf-8')
 
             if grbl_response != 'ok':
@@ -42,7 +43,7 @@ def wait_for_movement_completion(ser,line):
 def stream_gcode(port,gcode_path):
 
     ser = serial.Serial(port, BAUD_RATE)
-    send_wake_up(ser)
+    #send_wake_up(ser)
 
     with open(gcode_path, "r") as file:
         lines = file.readlines()
@@ -71,7 +72,7 @@ if __name__ == "__main__":
         print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode")
         sys.exit(1)
 
-    gcode_path = 'grbl_test.gcode'
+    #gcode_path = 'grbl_test.gcode'
 
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
