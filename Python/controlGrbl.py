@@ -23,7 +23,7 @@ def write_gcode(positions, write_filename):
         f.write(header)
         # write x,y coordinates
         for x, y in positions:
-            f.write(f"G1 X{x} Y{y}\n")
+            f.write(f"G01 X{x} Y{y}\n")
 
 
 def send_wake_up(ser):
@@ -36,7 +36,7 @@ def send_wake_up(ser):
 
 def wait_for_movement_completion(ser,line):
 
-    Event().wait(1)
+    Event().wait(2)
 
     if line != '$X' or '$$':
 
