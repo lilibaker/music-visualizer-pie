@@ -4,6 +4,27 @@ import sys
 from threading import Event
 
 BAUD_RATE = 115200
+WRITE_FILENAME_0 = "test_write_gcode_0.gcode"
+
+POSITION_0 = [
+    [0, 2],  
+    [1, 3],
+    [4, 4],
+    [9, 5],
+]
+
+#def scale_postion(raw_x, raw_y)
+    
+
+def write_gcode(positions, write_filename):
+    with open(write_filename, "w") as f:
+        # write header
+        header = """$$\n$X\nG21\nG28 G91\n"""
+        f.write(header)
+        # write x,y coordinates
+        for x, y in positions:
+            f.write(f"G1 X{x} Y{y}\n")
+
 
 def send_wake_up(ser):
     # Wake up
@@ -72,8 +93,7 @@ if __name__ == "__main__":
         print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode")
         sys.exit(1)
 
-    #gcode_path = 'grbl_test.gcode'
-
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
+    #write_gcode(POSITION_0, WRITE_FILENAME_0)
     stream_gcode(port, gcode_path)
