@@ -35,10 +35,10 @@ def get_spiral_positions(audio_features):
 
     # for each of the three desired spirals, get the positions
     for i in range(3):
-        # scale and to get the mod 7 value to map to color
-        color_value = audio_features[i] * 1000 % 7
-        # add the corresponding color number
-        colors.append(color_value)
+        # # scale and to get the mod 7 value to map to color
+        # color_value = audio_features[i] * 1000 % 7
+        # # add the corresponding color number
+        # colors.append(color_value)
         # get a list representing x absolute positions and a list of 
         # y absolute positions using prerecorded.draw
         curr_x, curr_y = prerecorded.draw(audio_features[feature_index], \
@@ -49,12 +49,14 @@ def get_spiral_positions(audio_features):
         # update feature index to account for the three features already used
         feature_index += 3
     # change the positions to be relative by subtracting previous position from current position
-    for i in range(1, len(x_positions)):
-        x_positions[i] = x_positions[i] - x_positions[i - 1]
-        y_positions[i] = y_positions[i] - y_positions[i - 1]
+    for i in range(3):
+        for j in range(1, len(x_positions[i])):
+            x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
+            y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
+    return x_positions, y_positions
     
 
-def write_gcode(colors, x_positions, y_positions, write_filename):
+def write_gcode(x_positions, y_positions, write_filename, colors=[]):
     """
     Create the gcode file based on the positions and colors.
 
@@ -69,7 +71,7 @@ def write_gcode(colors, x_positions, y_positions, write_filename):
     # crreate and write to a new gcode file
     with open(write_filename, "w") as f:
         # write header needed gcode that uses metric units and relative positions
-        header = """$$\n$X\nG21\nG28 G91\n"""
+        header = """$$\nG21 G91\n"""
         f.write(header)
         # write colors and positions needed for each of the three spirals
         # loop through each spiral
@@ -82,7 +84,7 @@ def write_gcode(colors, x_positions, y_positions, write_filename):
             for j in range(len(x_positions[i])):
                 x = x_positions[1][j]
                 y = y_positions[i][j]
-                f.write(f"G01 X{x} Y{y}\n")
+                f.write(f"G01 X{x} Y{y} F100\n")
 
 
 def send_wake_up(ser):
@@ -153,17 +155,30 @@ def stream_gcode(port, gcode_path):
     print('End of gcode')
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+#     print("called")
+#     try:
+#         port, gcode_path, features = sys.argv[1:4]
+#     except (ValueError, IndexError):
+#         print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode features")
+#         sys.exit(1)
 
-    try:
-        port, gcode_path, features = sys.argv[1:4]
-    except (ValueError, IndexError):
-        print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode features")
-        sys.exit(1)
+#     print("USB Port: ", port)
+#     print("Gcode file: ", gcode_path)
+#     print("Features: ", features)
+#     # get_spiral_positions(features)
+#     #write_gcode(POSITION_0, WRITE_FILENAME_0)
+#     stream_gcode(port, gcode_path)
 
+def run_grbl(port, gcode_path, features):
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
     print("Features: ", features)
-    get_spiral_positions(features)
+    # get_spiral_positions(features)
     #write_gcode(POSITION_0, WRITE_FILENAME_0)
+    x, y = get_spiral_positions(features)
+    write_gcode(x, y, gcode_path)
     stream_gcode(port, gcode_path)
+
+# stream_gcode('COM5', "row row row your boat.gcode")
+# stream_gcode('COM5', "test_grbl.gcode")

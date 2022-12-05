@@ -1,4 +1,3 @@
-import os
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import ThemedTk
@@ -124,7 +123,7 @@ def visualizeMusic(features):
     features[2] = features[2] * -1 / 60
 
     # draw with updated values
-    os.system(f"controlGrbl.py COM5 {name} {features}")
+    controlGrbl.run_grbl("COM5", f"gcode_files\{name}.gcode", features)
 
 # song name instructions
 songInstructions = ttk.Label(frmMain, 

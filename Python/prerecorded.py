@@ -6,6 +6,7 @@ import sys
 from pprint import pprint
 
 BAUD = 9600
+SCALE = 32.33 # 32.33 mm is the size of drawing area and steps are in mm
 
 def norm(v):
     return math.sqrt(sum(e**2 for e in v))
@@ -22,7 +23,7 @@ def draw(Ri, Ro, q, tmax=100, tstep=10):
 
     xs = [x(t) for t in range(0, tmax, tstep)]
     ys = [y(t) for t in range(0, tmax, tstep)]
-    xs = [x / norm(xs) for x in xs]
-    ys = [y / norm(ys) for y in ys]
+    xs = [x / norm(xs) * SCALE for x in xs]
+    ys = [y / norm(ys) * SCALE for y in ys]
 
     return xs, ys
