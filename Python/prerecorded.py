@@ -24,7 +24,5 @@ def draw(Ri, Ro, q, tmax=100, tstep=10):
     ys = [y(t) for t in range(0, tmax, tstep)]
     xs = [x / norm(xs) for x in xs]
     ys = [y / norm(ys) for y in ys]
-    xs = [b - a for a, b in itertools.pairwise(xs)]
-    ys = [b - a for a, b in itertools.pairwise(ys)]
 
     return xs, ys
