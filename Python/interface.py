@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import ThemedTk
@@ -14,6 +15,7 @@ sp = spotipy.Spotify(
     )
 
 # define global veriables
+name = ""
 RESULTS = 0
 features = []
 options = []
@@ -45,6 +47,7 @@ def displayArtists():
     the text box.
     """
     # get the song name the user entered; should be a string
+    global name 
     name = songName.get(1.0, "end-1c")
 
     # search the name of the song using spotify api
@@ -121,7 +124,7 @@ def visualizeMusic(features):
     features[2] = features[2] * -1 / 60
 
     # draw with updated values
-    controlGrbl.draw_all_spirals(features)
+    os.system(f"controlGrbl.py COM5 {name} {features}")
 
 # song name instructions
 songInstructions = ttk.Label(frmMain, 

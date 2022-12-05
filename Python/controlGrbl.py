@@ -5,6 +5,8 @@ from threading import Event
 import prerecorded
 
 BAUD_RATE = 115200
+
+# sample positions
 WRITE_FILENAME_0 = "test_write_gcode_0.gcode"
 
 POSITION_0 = [
@@ -14,38 +16,69 @@ POSITION_0 = [
     [9, 5],
 ]
 
-COLOR_OPTIONS = [i for i in range(0,6)]
+def get_spiral_positions(audio_features):
+    """
+    Get all of the relative positions for gantry movement.
 
-#def scale_postion(raw_x, raw_y)
-
-def draw_all_spirals(audio_features):
-    # get points from audio features
+    Args:
+        audio_features: A list of floats represening audio features
+            found through spotify api.
+    """
+    # get colors and points from audio features
+    # set up lists
     colors = []
     x_positions = []
     y_positions = []
+
+    # keep track of the index of the current feature
     feature_index = 0
+
+    # for each of the three desired spirals, get the positions
     for i in range(3):
         # scale and to get the mod 7 value to map to color
         color_value = audio_features[i] * 1000 % 7
+        # add the corresponding color number
         colors.append(color_value)
+        # get a list representing x absolute positions and a list of 
+        # y absolute positions using prerecorded.draw
         curr_x, curr_y = prerecorded.draw(audio_features[feature_index], \
                         audio_features[feature_index+1], audio_features[feature_index+2])
+        # add the list of positions to thep predefined lists
         x_positions.append(curr_x)
         y_positions.append(curr_y)
+        # update feature index to account for the three features already used
         feature_index += 3
+    # change the positions to be relative by subtracting previous position from current position
     for i in range(1, len(x_positions)):
         x_positions[i] = x_positions[i] - x_positions[i - 1]
         y_positions[i] = y_positions[i] - y_positions[i - 1]
     
 
 def write_gcode(colors, x_positions, y_positions, write_filename):
+    """
+    Create the gcode file based on the positions and colors.
+
+    Args:
+        colors: A list of integers representing desired color for each spiral.
+        x_positions: A list of lists containing floats with relative positions
+            for x stepper.
+        y_positions: A list of lists containing floats with relative positions
+            for y stepper.
+        write_filename: A string with the desired name for the gcode file.
+    """
+    # crreate and write to a new gcode file
     with open(write_filename, "w") as f:
-        # write header
+        # write header needed gcode that uses metric units and relative positions
         header = """$$\n$X\nG21\nG28 G91\n"""
         f.write(header)
-        # write x,y coordinates
+        # write colors and positions needed for each of the three spirals
+        # loop through each spiral
         for i in range(len(x_positions)):
+            # for the current spiral, write the movement needed for desired color
             # f.write(f"G01 Z{z}\n") -- figure out how much to turn to send to gcode
+
+            # for the current spiral, loop through each position and write required
+            # movement to file
             for j in range(len(x_positions[i])):
                 x = x_positions[1][j]
                 y = y_positions[i][j]
@@ -53,6 +86,9 @@ def write_gcode(colors, x_positions, y_positions, write_filename):
 
 
 def send_wake_up(ser):
+    """
+    TODO: Add docstring
+    """
     # Wake up
     # Hit enter a few times to wake the Printrbot
     print("writing enter")
@@ -61,6 +97,9 @@ def send_wake_up(ser):
     ser.flushInput()  # Flush startup text in serial input
 
 def wait_for_movement_completion(ser,line):
+    """
+    TODO: Add docstring
+    """
 
     Event().wait(2)
 
@@ -87,7 +126,10 @@ def wait_for_movement_completion(ser,line):
     return
 
 
-def stream_gcode(port,gcode_path):
+def stream_gcode(port, gcode_path):
+    """
+    TODO: Add docstring
+    """
 
     ser = serial.Serial(port, BAUD_RATE)
     #send_wake_up(ser)
@@ -114,12 +156,14 @@ def stream_gcode(port,gcode_path):
 if __name__ == "__main__":
 
     try:
-        port, gcode_path = sys.argv[1:3]
+        port, gcode_path, features = sys.argv[1:4]
     except (ValueError, IndexError):
-        print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode")
+        print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode features")
         sys.exit(1)
 
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
+    print("Features: ", features)
+    get_spiral_positions(features)
     #write_gcode(POSITION_0, WRITE_FILENAME_0)
     stream_gcode(port, gcode_path)
