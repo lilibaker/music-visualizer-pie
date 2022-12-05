@@ -4,6 +4,7 @@ from ttkthemes import ThemedTk
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import prerecorded
+import controlGrbl
 
 sp = spotipy.Spotify(
         auth_manager=SpotifyClientCredentials(
@@ -120,9 +121,7 @@ def visualizeMusic(features):
     features[2] = features[2] * -1 / 60
 
     # draw with updated values
-    prerecorded.draw(features[0], features[1], features[2])
-    prerecorded.draw(features[3], features[4], features[5])
-    prerecorded.draw(features[6], features[7], features[8])
+    controlGrbl.draw_all_spirals(features)
 
 # song name instructions
 songInstructions = ttk.Label(frmMain, 

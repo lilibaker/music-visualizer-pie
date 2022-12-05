@@ -2,6 +2,7 @@ import serial
 import time
 import sys
 from threading import Event
+import prerecorded
 
 BAUD_RATE = 115200
 WRITE_FILENAME_0 = "test_write_gcode_0.gcode"
@@ -13,17 +14,42 @@ POSITION_0 = [
     [9, 5],
 ]
 
+COLOR_OPTIONS = [i for i in range(0,6)]
+
 #def scale_postion(raw_x, raw_y)
+
+def draw_all_spirals(audio_features):
+    # get points from audio features
+    colors = []
+    x_positions = []
+    y_positions = []
+    feature_index = 0
+    for i in range(3):
+        # scale and to get the mod 7 value to map to color
+        color_value = audio_features[i] * 1000 % 7
+        colors.append(color_value)
+        curr_x, curr_y = prerecorded.draw(audio_features[feature_index], \
+                        audio_features[feature_index+1], audio_features[feature_index+2])
+        x_positions.append(curr_x)
+        y_positions.append(curr_y)
+        feature_index += 3
+    for i in range(1, len(x_positions)):
+        x_positions[i] = x_positions[i] - x_positions[i - 1]
+        y_positions[i] = y_positions[i] - y_positions[i - 1]
     
 
-def write_gcode(positions, write_filename):
+def write_gcode(colors, x_positions, y_positions, write_filename):
     with open(write_filename, "w") as f:
         # write header
         header = """$$\n$X\nG21\nG28 G91\n"""
         f.write(header)
         # write x,y coordinates
-        for x, y in positions:
-            f.write(f"G01 X{x} Y{y}\n")
+        for i in range(len(x_positions)):
+            # f.write(f"G01 Z{z}\n") -- figure out how much to turn to send to gcode
+            for j in range(len(x_positions[i])):
+                x = x_positions[1][j]
+                y = y_positions[i][j]
+                f.write(f"G01 X{x} Y{y}\n")
 
 
 def send_wake_up(ser):
