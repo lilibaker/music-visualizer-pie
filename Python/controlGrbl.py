@@ -27,8 +27,8 @@ def get_spiral_positions(audio_features):
     # get colors and points from audio features
     # set up lists
     colors = []
-    x_positions = [0]
-    y_positions = [0]
+    x_positions = []
+    y_positions = []
 
     # keep track of the index of the current feature
     feature_index = 0
@@ -50,7 +50,7 @@ def get_spiral_positions(audio_features):
         feature_index += 3
     # change the positions to be relative by subtracting previous position from current position
     for i in range(3):
-        for j in range(1, len(x_positions[i])):
+        for j in range(1, len(x_positions)):
             x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
             y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
     return x_positions, y_positions
@@ -103,7 +103,7 @@ def wait_for_movement_completion(ser,line):
     TODO: Add docstring
     """
 
-    Event().wait(2)
+    Event().wait(1)
 
     if line != '$X' or '$$':
 
