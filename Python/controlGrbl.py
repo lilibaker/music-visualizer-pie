@@ -27,8 +27,8 @@ def get_spiral_positions(audio_features):
     # get colors and points from audio features
     # set up lists
     colors = []
-    x_positions = []
-    y_positions = []
+    x_positions = [0]
+    y_positions = [0]
 
     # keep track of the index of the current feature
     feature_index = 0
@@ -82,7 +82,7 @@ def write_gcode(x_positions, y_positions, write_filename, colors=[]):
             # for the current spiral, loop through each position and write required
             # movement to file
             for j in range(len(x_positions[i])):
-                x = x_positions[1][j]
+                x = x_positions[i][j]
                 y = y_positions[i][j]
                 f.write(f"G01 X{x} Y{y} F100\n")
 
