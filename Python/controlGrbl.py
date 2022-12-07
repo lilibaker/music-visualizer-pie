@@ -29,7 +29,6 @@ def get_spiral_positions(audio_features):
     colors = []
     x_positions = []
     y_positions = []
-
     # keep track of the index of the current feature
     feature_index = 0
 
@@ -48,11 +47,20 @@ def get_spiral_positions(audio_features):
         y_positions.append(curr_y)
         # update feature index to account for the three features already used
         feature_index += 3
+    
     # change the positions to be relative by subtracting previous position from current position
     for i in range(3):
+        x_positions[i].append(x_positions[i][0])
+        y_positions[i].append(y_positions[i][0])
+        
         for j in range(1, len(x_positions)):
             x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
             y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
+    
+    x_positions[1][0] = x_positions[1][0] - x_positions[0][-1]
+    y_positions[1][0] = y_positions[1][0] - y_positions[0][-1]
+    x_positions[2][0] = x_positions[2][0] - x_positions[1][-1]
+    y_positions[2][0] = y_positions[2][0] - y_positions[1][-1]
     return x_positions, y_positions
     
 
