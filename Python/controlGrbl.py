@@ -50,8 +50,8 @@ def get_spiral_positions(audio_features):
     
     # change the positions to be relative by subtracting previous position from current position
     for i in range(3):
-        x_positions[i].append(x_positions[i][0])
-        y_positions[i].append(y_positions[i][0])
+        # x_positions[i].append(x_positions[i][0])
+        # y_positions[i].append(y_positions[i][0])
         
         for j in range(1, len(x_positions)):
             x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
