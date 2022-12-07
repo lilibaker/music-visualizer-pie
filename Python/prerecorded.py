@@ -6,7 +6,7 @@ from pprint import pprint
 import numpy as np
 
 BAUD = 9600
-SCALE = 33 # 33 mm is the size of drawing area and steps are in mm
+SCALE = 325 # 325 mm is the size of drawing area and steps are in mm
 
 def norm(v):
     return math.sqrt(sum(e**2 for e in v))
