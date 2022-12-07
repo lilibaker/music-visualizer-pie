@@ -31,22 +31,38 @@ def get_spiral_positions(audio_features):
     y_positions = []
     # keep track of the index of the current feature
     feature_index = 0
-
+    audio_features = list(sorted(audio_features))[::-1]
+    curr_x, curr_y = prerecorded.draw(audio_features[2], \
+                        audio_features[6], audio_features[4])
+    # add the list of positions to thep predefined lists
+    x_positions.extend(curr_x)
+    y_positions.extend(curr_y)
+    # curr_x, curr_y = prerecorded.draw(2, \
+    #                     3, .5)
+    # # add the list of positions to thep predefined lists
+    # x_positions.extend(curr_x)
+    # y_positions.extend(curr_y)
+    # curr_x, curr_y = prerecorded.draw(3, \
+    #                     4, .5)
+    # # add the list of positions to thep predefined lists
+    # x_positions.extend(curr_x)
+    # y_positions.extend(curr_y)
     # for each of the three desired spirals, get the positions
-    for i in range(3):
-        # # scale and to get the mod 7 value to map to color
-        # color_value = audio_features[i] * 1000 % 7
-        # # add the corresponding color number
-        # colors.append(color_value)
-        # get a list representing x absolute positions and a list of 
-        # y absolute positions using prerecorded.draw
-        curr_x, curr_y = prerecorded.draw(audio_features[feature_index], \
-                        audio_features[feature_index+1], audio_features[feature_index+2])
-        # add the list of positions to thep predefined lists
-        x_positions.extend(curr_x)
-        y_positions.extend(curr_y)
-        # update feature index to account for the three features already used
-        feature_index += 3
+    # for i in range(3):
+    #     # # scale and to get the mod 7 value to map to color
+    #     # color_value = audio_features[i] * 1000 % 7
+    #     # # add the corresponding color number
+    #     # colors.append(color_value)
+    #     # get a list representing x absolute positions and a list of 
+    #     # y absolute positions using prerecorded.draw
+
+    #     curr_x, curr_y = prerecorded.draw(audio_features[i], \
+    #                     audio_features[i+1], audio_features[i+2])
+    #     # add the list of positions to thep predefined lists
+    #     x_positions.extend(curr_x)
+    #     y_positions.extend(curr_y)
+    #     # update feature index to account for the three features already used
+    #     # feature_index += 3
     
     # change the positions to be relative by subtracting previous position from current position
     # store temp positions
