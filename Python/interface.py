@@ -55,6 +55,7 @@ def displayArtists():
 
     # save the first five songs with artist names to options
     global options
+    options.clear()
     for i, track in enumerate(RESULTS["tracks"]["items"]):
         options.append(f"[{i}] {track['name']} by {track['artists'][0]['name']}")
     
