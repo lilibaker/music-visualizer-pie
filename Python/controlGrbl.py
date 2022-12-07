@@ -43,38 +43,43 @@ def get_spiral_positions(audio_features):
         curr_x, curr_y = prerecorded.draw(audio_features[feature_index], \
                         audio_features[feature_index+1], audio_features[feature_index+2])
         # add the list of positions to thep predefined lists
-        x_positions.append(curr_x)
-        y_positions.append(curr_y)
+        x_positions.extend(curr_x)
+        y_positions.extend(curr_y)
         # update feature index to account for the three features already used
         feature_index += 3
     
     # change the positions to be relative by subtracting previous position from current position
     # store temp positions
-    temp_x_2 = x_positions[1][0]
-    temp_y_2 = y_positions[1][0]
-    temp_x_3 = x_positions[2][0]
-    temp_y_3 = y_positions[2][0]
-    # calculate relatvie positions for each first point in the spirals
-    x_positions[1][0] = x_positions[1][0] - x_positions[0][-1]
-    y_positions[1][0] = y_positions[1][0] - y_positions[0][-1]
-    x_positions[2][0] = x_positions[2][0] - x_positions[1][-1]
-    y_positions[2][0] = y_positions[2][0] - y_positions[1][-1]
-    for i in range(3):
-        # x_positions[i].append(x_positions[i][0])
-        # y_positions[i].append(y_positions[i][0])
+    # temp_x_2 = x_positions[1][0]
+    # temp_y_2 = y_positions[1][0]
+    # temp_x_3 = x_positions[2][0]
+    # temp_y_3 = y_positions[2][0]
+    # # calculate relatvie positions for each first point in the spirals
+    # x_positions[1][0] = x_positions[1][0] - x_positions[0][-1]
+    # y_positions[1][0] = y_positions[1][0] - y_positions[0][-1]
+    # x_positions[2][0] = x_positions[2][0] - x_positions[1][-1]
+    # y_positions[2][0] = y_positions[2][0] - y_positions[1][-1]
+    # for i in range(3):
+    #     # x_positions[i].append(x_positions[i][0])
+    #     # y_positions[i].append(y_positions[i][0])
         
-        for j in range(1, len(x_positions)):
-            if j == 1:
-                if i == 1:
-                    x_positions[i][j] = temp_x_2
-                    y_positions[i][j] = temp_y_2
-                else:
-                    x_positions[i][j] = temp_x_3
-                    y_positions[i][j] = temp_y_3
-            else:
-                x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
-                y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
-    
+    #     for j in range(1, len(x_positions)):
+    #         if j == 1:
+    #             if i == 1:
+    #                 x_positions[i][j] = temp_x_2
+    #                 y_positions[i][j] = temp_y_2
+    #             else:
+    #                 x_positions[i][j] = temp_x_3
+    #                 y_positions[i][j] = temp_y_3
+    #         else:
+    #             x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
+    #             y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
+
+    x_positions = [x_positions[i] - x_positions[i-1] for i in range(1, len(x_positions))]
+    y_positions = [y_positions[i] - y_positions[i-1] for i in range(1, len(y_positions))]
+
+    x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
+    y_positions = [y_positions[0:100], y_positions[100:200], y_positions[200:300]]
     return x_positions, y_positions
     
 
