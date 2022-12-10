@@ -29,74 +29,38 @@ def get_spiral_positions(audio_features):
     colors = []
     x_positions = []
     y_positions = []
-    # keep track of the index of the current feature
-    feature_index = 0
-    audio_features = list(sorted(audio_features))[::-1]
-    curr_x, curr_y = prerecorded.draw(audio_features[2], \
-                        audio_features[6], audio_features[4])
-    # add the list of positions to thep predefined lists
+    
+    audio_features = list(sorted(audio_features))
+
+    # generate first spiral
+    curr_x, curr_y = prerecorded.draw(audio_features[0], \
+                        audio_features[2], audio_features[1])
+    # add the list of positions to the predefined lists
     x_positions.extend(curr_x)
     y_positions.extend(curr_y)
-    # curr_x, curr_y = prerecorded.draw(2, \
-    #                     3, .5)
-    # # add the list of positions to thep predefined lists
-    # x_positions.extend(curr_x)
-    # y_positions.extend(curr_y)
-    # curr_x, curr_y = prerecorded.draw(3, \
-    #                     4, .5)
-    # # add the list of positions to thep predefined lists
-    # x_positions.extend(curr_x)
-    # y_positions.extend(curr_y)
-    # for each of the three desired spirals, get the positions
-    # for i in range(3):
-    #     # # scale and to get the mod 7 value to map to color
-    #     # color_value = audio_features[i] * 1000 % 7
-    #     # # add the corresponding color number
-    #     # colors.append(color_value)
-    #     # get a list representing x absolute positions and a list of
-    #     # y absolute positions using prerecorded.draw
 
-    #     curr_x, curr_y = prerecorded.draw(audio_features[i], \
-    #                     audio_features[i+1], audio_features[i+2])
-    #     # add the list of positions to thep predefined lists
-    #     x_positions.extend(curr_x)
-    #     y_positions.extend(curr_y)
-    #     # update feature index to account for the three features already used
-    #     # feature_index += 3
+    # generate second spiral
+    curr_x, curr_y = prerecorded.draw(audio_features[3], \
+                        audio_features[5], audio_features[4])
+    # add the list of positions to the predefined lists
+    x_positions.extend(curr_x)
+    y_positions.extend(curr_y)
 
-    # change the positions to be relative by subtracting previous position from current position
-    # store temp positions
-    # temp_x_2 = x_positions[1][0]
-    # temp_y_2 = y_positions[1][0]
-    # temp_x_3 = x_positions[2][0]
-    # temp_y_3 = y_positions[2][0]
-    # # calculate relatvie positions for each first point in the spirals
-    # x_positions[1][0] = x_positions[1][0] - x_positions[0][-1]
-    # y_positions[1][0] = y_positions[1][0] - y_positions[0][-1]
-    # x_positions[2][0] = x_positions[2][0] - x_positions[1][-1]
-    # y_positions[2][0] = y_positions[2][0] - y_positions[1][-1]
-    # for i in range(3):
-    #     # x_positions[i].append(x_positions[i][0])
-    #     # y_positions[i].append(y_positions[i][0])
-
-    #     for j in range(1, len(x_positions)):
-    #         if j == 1:
-    #             if i == 1:
-    #                 x_positions[i][j] = temp_x_2
-    #                 y_positions[i][j] = temp_y_2
-    #             else:
-    #                 x_positions[i][j] = temp_x_3
-    #                 y_positions[i][j] = temp_y_3
-    #         else:
-    #             x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
-    #             y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
-
+    # generate third spiral
+    curr_x, curr_y = prerecorded.draw(audio_features[6], \
+                        audio_features[8], audio_features[7])
+    # add the list of positions to the predefined lists
+    x_positions.extend(curr_x)
+    y_positions.extend(curr_y)
+    
+    # get relative position of each point by subtarcting previous position for gcode
+    # normalize the points and then scale for the rage of drawing area
     x_positions = [325 * (x_positions[i] - x_positions[i-1]) / prerecorded.norm(x_positions) for i in range(1, len(x_positions))]
     y_positions = [325 * (y_positions[i] - y_positions[i-1]) / prerecorded.norm(y_positions) for i in range(1, len(y_positions))]
 
-
-    x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
-    y_positions = [y_positions[0:100], y_positions[100:200], y_positions[200:300]]
+    # split positions into a list of lists that contain points for each of the three spirals
+    x_positions = [x_positions[0:1000], x_positions[1000:2000], x_positions[2000:3000]]
+    y_positions = [y_positions[0:1000], y_positions[1000:2000], y_positions[2000:3000]]
     return x_positions, y_positions
 
 
@@ -199,22 +163,10 @@ def stream_gcode(port, gcode_path):
     print('End of gcode')
 
 
-# if __name__ == "__main__":
-#     print("called")
-#     try:
-#         port, gcode_path, features = sys.argv[1:4]
-#     except (ValueError, IndexError):
-#         print("Error: Use like python controlGrbl.py ARDUINO_PORT test_grbl.gcode features")
-#         sys.exit(1)
-
-#     print("USB Port: ", port)
-#     print("Gcode file: ", gcode_path)
-#     print("Features: ", features)
-#     # get_spiral_positions(features)
-#     #write_gcode(POSITION_0, WRITE_FILENAME_0)
-#     stream_gcode(port, gcode_path)
-
 def run_grbl(port, gcode_path, features):
+    """
+    TODO: Add docstring
+    """
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
     print("Features: ", features)
@@ -223,7 +175,3 @@ def run_grbl(port, gcode_path, features):
     x, y = get_spiral_positions(features)
     write_gcode(x, y, gcode_path)
     stream_gcode(port, gcode_path)
-
-# stream_gcode('COM5', "row row row your boat.gcode")
-# stream_gcode('COM5', "test_grbl.gcode")
-# stream_gcode('COM5', "gcode_files\yesterday.gcode")
