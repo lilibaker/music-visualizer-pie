@@ -100,6 +100,8 @@ def getFeatures():
     
     # store the values of the desired features in features
     global features
+    # get rid of previous features
+    features = []
     i = 0
     for feature in ["danceability", "key", "loudness", "mode",\
         "acousticness", "instrumentalness", "liveness", "valence", \
