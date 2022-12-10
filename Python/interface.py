@@ -14,7 +14,7 @@ sp = spotipy.Spotify(
         )
     )
 
-# define global veriables
+# define global variables
 name = ""
 RESULTS = 0
 features = []
