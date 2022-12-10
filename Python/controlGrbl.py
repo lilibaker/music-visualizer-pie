@@ -58,9 +58,6 @@ def get_spiral_positions(audio_features):
     x_positions = [325 * (x_positions[i] - x_positions[i-1]) / prerecorded.norm(x_positions) for i in range(1, len(x_positions))]
     y_positions = [325 * (y_positions[i] - y_positions[i-1]) / prerecorded.norm(y_positions) for i in range(1, len(y_positions))]
 
-    # split positions into a list of lists that contain points for each of the three spirals
-    x_positions = [x_positions[0:1000], x_positions[1000:2000], x_positions[2000:3000]]
-    y_positions = [y_positions[0:1000], y_positions[1000:2000], y_positions[2000:3000]]
     return x_positions, y_positions
 
 
@@ -87,12 +84,10 @@ def write_gcode(x_positions, y_positions, write_filename, colors=[]):
             # for the current spiral, write the movement needed for desired color
             # f.write(f"G01 Z{z}\n") -- figure out how much to turn to send to gcode
 
-            # for the current spiral, loop through each position and write required
-            # movement to file
-            for j in range(len(x_positions[i])):
-                x = x_positions[i][j]
-                y = y_positions[i][j]
-                f.write(f"G01 X{x} Y{y} F100\n")
+            # loop through each position and write required movement to file
+            x = x_positions[i]
+            y = y_positions[i]
+            f.write(f"G01 X{x} Y{y} F100\n")
 
 
 def send_wake_up(ser):
@@ -174,4 +169,5 @@ def run_grbl(port, gcode_path, features):
     #write_gcode(POSITION_0, WRITE_FILENAME_0)
     x, y = get_spiral_positions(features)
     write_gcode(x, y, gcode_path)
-    stream_gcode(port, gcode_path)
+    # stream_gcode(port, gcode_path)
+    print("Done")
