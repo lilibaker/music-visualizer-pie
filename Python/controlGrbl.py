@@ -29,7 +29,7 @@ def get_spiral_positions(audio_features):
     colors = []
     x_positions = []
     y_positions = []
-    
+
     audio_features = list(sorted(audio_features))
 
     # generate first spiral
@@ -52,11 +52,12 @@ def get_spiral_positions(audio_features):
     # add the list of positions to the predefined lists
     x_positions.extend(curr_x)
     y_positions.extend(curr_y)
-    
+
     # get relative position of each point by subtarcting previous position for gcode
     # normalize the points and then scale for the rage of drawing area
-    x_positions = [325 * (x_positions[i] - x_positions[i-1]) / prerecorded.norm(x_positions) for i in range(1, len(x_positions))]
-    y_positions = [325 * (y_positions[i] - y_positions[i-1]) / prerecorded.norm(y_positions) for i in range(1, len(y_positions))]
+    #norm = max(prerecorded.norm(x_positions), prerecorded.norm(y_positions))
+    x_positions = [167.5 * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
+    y_positions = [167.5 * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
 
     return x_positions, y_positions
 
