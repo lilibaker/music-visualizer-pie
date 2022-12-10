@@ -30,6 +30,9 @@ def get_spiral_positions(audio_features):
     # add the list of positions to the predefined lists
     x_positions.extend(curr_x)
     y_positions.extend(curr_y)
+    # add color for first spiral
+    first_color_value = int(audio_features[1] * 1000 % 7)
+    colors.append(first_color_value)
 
     # generate second spiral
     curr_x, curr_y = prerecorded.draw(audio_features[3], \
@@ -37,6 +40,9 @@ def get_spiral_positions(audio_features):
     # add the list of positions to the predefined lists
     x_positions.extend(curr_x)
     y_positions.extend(curr_y)
+    # add color for first spiral
+    second_color_value = int(audio_features[4] * 1000 % 7)
+    colors.append(second_color_value)
 
     # generate third spiral
     curr_x, curr_y = prerecorded.draw(audio_features[6], \
@@ -44,16 +50,23 @@ def get_spiral_positions(audio_features):
     # add the list of positions to the predefined lists
     x_positions.extend(curr_x)
     y_positions.extend(curr_y)
+    # add color for first spiral
+    third_color_value = int(audio_features[7] * 1000 % 7)
+    colors.append(third_color_value)
 
     # get relative position of each point by subtarcting previous position for gcode
     # normalize the points and then scale for the rage of drawing area
     x_positions = [167.5 * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
     y_positions = [167.5 * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
 
-    return x_positions, y_positions
+    # seperate into three lists so there is one list per spiral for later color changing
+    x_positions = [x_positions[0:1000], x_positions[1000:2000], x_positions[2000:3000]]
+    y_positions = [y_positions[0:1000], y_positions[1000:2000], y_positions[2000:3000]]
+    
+    return x_positions, y_positions, colors
 
 
-def write_gcode(x_positions, y_positions, write_filename, colors=[]):
+def write_gcode(x_positions, y_positions, colors, write_filename):
     """
     Create the gcode file based on the positions and colors.
 
@@ -62,8 +75,8 @@ def write_gcode(x_positions, y_positions, write_filename, colors=[]):
             for x stepper.
         y_positions: A list of lists containing floats with relative positions
             for y stepper.
-        write_filename: A string with the desired name for the gcode file.
         colors: A list of integers representing desired color for each spiral.
+        write_filename: A string with the desired name for the gcode file.
     """
     # create and write to a new gcode file
     with open(write_filename, "w") as f:
@@ -74,12 +87,14 @@ def write_gcode(x_positions, y_positions, write_filename, colors=[]):
         # loop through each spiral
         for i in range(len(x_positions)):
             # for the current spiral, write the movement needed for desired color
-            # f.write(f"G01 Z{z}\n") -- figure out how much to turn to send to gcode
+            z = colors[i]
+            f.write(f"G01 Z{z} F100\n")
 
-            # loop through each position and write required movement to file
-            x = x_positions[i]
-            y = y_positions[i]
-            f.write(f"G01 X{x} Y{y} F100\n")
+            # loop through each position in each spiral and write required movement to file
+            for j in range(len(x_positions[i])):
+                x = x_positions[i][j]
+                y = y_positions[i][j]
+                f.write(f"G01 X{x} Y{y} F100\n")
 
 
 def send_wake_up(ser):
@@ -165,7 +180,8 @@ def run_grbl(port, gcode_path, features):
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
     print("Features: ", features)
-    x, y = get_spiral_positions(features)
-    write_gcode(x, y, gcode_path)
-    stream_gcode(port, gcode_path)
+    x, y, colors = get_spiral_positions(features)
+    write_gcode(x, y, colors, gcode_path)
+    # stream_gcode(port, gcode_path)
+    print(colors)
     print("Done")
