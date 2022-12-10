@@ -23,7 +23,5 @@ def draw(Ri, Ro, q, tmax=100, N=100):
 
     xs = [0] +  [x(t) for t in np.linspace(0, tmax, N)]
     ys = [0] +  [y(t) for t in np.linspace(0, tmax, N)]
-    xs = [x / norm(xs) * SCALE for x in xs]
-    ys = [y / norm(ys) * SCALE for y in ys]
 
     return xs, ys

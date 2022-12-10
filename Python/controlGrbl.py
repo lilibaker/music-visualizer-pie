@@ -10,7 +10,7 @@ BAUD_RATE = 115200
 WRITE_FILENAME_0 = "test_write_gcode_0.gcode"
 
 POSITION_0 = [
-    [0, 2],  
+    [0, 2],
     [1, 3],
     [4, 4],
     [9, 5],
@@ -53,7 +53,7 @@ def get_spiral_positions(audio_features):
     #     # color_value = audio_features[i] * 1000 % 7
     #     # # add the corresponding color number
     #     # colors.append(color_value)
-    #     # get a list representing x absolute positions and a list of 
+    #     # get a list representing x absolute positions and a list of
     #     # y absolute positions using prerecorded.draw
 
     #     curr_x, curr_y = prerecorded.draw(audio_features[i], \
@@ -63,7 +63,7 @@ def get_spiral_positions(audio_features):
     #     y_positions.extend(curr_y)
     #     # update feature index to account for the three features already used
     #     # feature_index += 3
-    
+
     # change the positions to be relative by subtracting previous position from current position
     # store temp positions
     # temp_x_2 = x_positions[1][0]
@@ -78,7 +78,7 @@ def get_spiral_positions(audio_features):
     # for i in range(3):
     #     # x_positions[i].append(x_positions[i][0])
     #     # y_positions[i].append(y_positions[i][0])
-        
+
     #     for j in range(1, len(x_positions)):
     #         if j == 1:
     #             if i == 1:
@@ -91,13 +91,14 @@ def get_spiral_positions(audio_features):
     #             x_positions[i][j] = x_positions[i][j] - x_positions[i][j-1]
     #             y_positions[i][j] = y_positions[i][j] - y_positions[i][j-1]
 
-    x_positions = [x_positions[i] - x_positions[i-1] for i in range(1, len(x_positions))]
-    y_positions = [y_positions[i] - y_positions[i-1] for i in range(1, len(y_positions))]
+    x_positions = [325 * (x_positions[i] - x_positions[i-1]) / prerecorded.norm(x_positions) for i in range(1, len(x_positions))]
+    y_positions = [325 * (y_positions[i] - y_positions[i-1]) / prerecorded.norm(y_positions) for i in range(1, len(y_positions))]
+
 
     x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
     y_positions = [y_positions[0:100], y_positions[100:200], y_positions[200:300]]
     return x_positions, y_positions
-    
+
 
 def write_gcode(x_positions, y_positions, write_filename, colors=[]):
     """
