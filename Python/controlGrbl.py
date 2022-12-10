@@ -4,17 +4,8 @@ import sys
 from threading import Event
 import prerecorded
 
+# baud rate for serial communication
 BAUD_RATE = 115200
-
-# sample positions
-WRITE_FILENAME_0 = "test_write_gcode_0.gcode"
-
-POSITION_0 = [
-    [0, 2],
-    [1, 3],
-    [4, 4],
-    [9, 5],
-]
 
 def get_spiral_positions(audio_features):
     """
@@ -30,6 +21,7 @@ def get_spiral_positions(audio_features):
     x_positions = []
     y_positions = []
 
+    # sort the values of audio_features in ascending order
     audio_features = list(sorted(audio_features))
 
     # generate first spiral
@@ -55,7 +47,6 @@ def get_spiral_positions(audio_features):
 
     # get relative position of each point by subtarcting previous position for gcode
     # normalize the points and then scale for the rage of drawing area
-    #norm = max(prerecorded.norm(x_positions), prerecorded.norm(y_positions))
     x_positions = [167.5 * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
     y_positions = [167.5 * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
 
@@ -67,14 +58,14 @@ def write_gcode(x_positions, y_positions, write_filename, colors=[]):
     Create the gcode file based on the positions and colors.
 
     Args:
-        colors: A list of integers representing desired color for each spiral.
         x_positions: A list of lists containing floats with relative positions
             for x stepper.
         y_positions: A list of lists containing floats with relative positions
             for y stepper.
         write_filename: A string with the desired name for the gcode file.
+        colors: A list of integers representing desired color for each spiral.
     """
-    # crreate and write to a new gcode file
+    # create and write to a new gcode file
     with open(write_filename, "w") as f:
         # write header needed gcode that uses metric units and relative positions
         header = """$$\nG21 G91\n"""
@@ -161,14 +152,20 @@ def stream_gcode(port, gcode_path):
 
 def run_grbl(port, gcode_path, features):
     """
-    TODO: Add docstring
+    Get positions, generate gcode file, and send file to grbl
+    to run the stepper motors.
+
+    Args:
+        port: A string represnting the COM port for serial communication.
+        gcode_path: A string representing the file path for where
+            to save the gcode file.
+        features: A list of floats representing the audio features of the
+            song obtained from the spotify api.
     """
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
     print("Features: ", features)
-    # get_spiral_positions(features)
-    #write_gcode(POSITION_0, WRITE_FILENAME_0)
     x, y = get_spiral_positions(features)
     write_gcode(x, y, gcode_path)
-    # stream_gcode(port, gcode_path)
+    stream_gcode(port, gcode_path)
     print("Done")

@@ -6,6 +6,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import prerecorded
 import controlGrbl
 
+# define spotify credentials
 sp = spotipy.Spotify(
         auth_manager=SpotifyClientCredentials(
             client_id="ca4037574604402aa16cc9ead70aa2e3",
@@ -18,7 +19,6 @@ name = ""
 RESULTS = 0
 features = []
 options = []
-
 
 # set up window with theme
 root = ThemedTk(theme="breeze")
@@ -55,6 +55,7 @@ def displayArtists():
 
     # save the first five songs with artist names to options
     global options
+    # clear options before adding new ones so multiple songs can be chosen
     options.clear()
     for i, track in enumerate(RESULTS["tracks"]["items"]):
         options.append(f"[{i}] {track['name']} by {track['artists'][0]['name']}")
@@ -66,7 +67,6 @@ def updateScreen():
     """
     Update the screen to have a dropdown with list of songs and a button to draw.
     """
-    
     # artist name instructions
     artistInstructions = ttk.Label(frmMain, 
                                     text="Once the list of songs appears, select the song you want and click done!",
@@ -117,7 +117,6 @@ def visualizeMusic(features):
         features: Array of floats representing the song's feature values
             on a scale of 0 to 1.
     """
-
     # scale key so it is between 0 and 1; the normal range is -1 to 11
     features[1] = (features[1] + 1) / 12
     # scale loudness to 0 to 1; normal range is -60 to 0
@@ -142,4 +141,5 @@ songName.grid(row=6, column = 0, pady = 7)
 searchName = ttk.Button(frmMain, text="Search Song", command=displayArtists)
 searchName.grid(row=7, column = 0, pady = 7)
 
+# run the main loop for tkinter window
 root.mainloop()
