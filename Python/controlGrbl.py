@@ -97,42 +97,56 @@ def write_gcode(x_positions, y_positions, colors, write_filename):
                 f.write(f"G01 X{x} Y{y} F1000\n")
 
 
-def send_wake_up(ser):
+'''def send_wake_up(ser):
     """
-    TODO: Add docstring
+    (This function is not being called)
     """
     # Wake up
     # Hit enter a few times to wake the Printrbot
     print("writing enter")
     ser.write(str.encode("\r\n\r\n"))
     time.sleep(2)   # Wait for Printrbot to initialize
-    ser.flushInput()  # Flush startup text in serial input
+    ser.flushInput()  # Flush startup text in serial input'''
+
 
 def wait_for_movement_completion(ser,line):
     """
-    TODO: Add docstring
+    Wait for position command line to run while constantly checking status.
+
+    Args: 
+        ser: Serial object name.
+        line: A string representing one of the gcode command line.
     """
 
     Event().wait(1)
 
+    # for every position command line
     if line != '$X' or '$$':
 
+        # initialize counter for status report
         idle_counter = 0
 
         while True:
-
-            # Event().wait(0.01)
+            # flush serial input buffer
             ser.reset_input_buffer()
+            # send grbl status status reporting request
             command = str.encode('?' + '\n')
             ser.write(command)
+
+            # get grbl response line that ends with carriage return
             grbl_out = ser.readline()
+
+            # decode and display grbl response
             grbl_response = grbl_out.strip().decode('utf-8')
 
+            # pick out status report lines
             if grbl_response != 'ok':
 
+                # keep counting status report times
                 if grbl_response.find('Idle') > 0:
                     idle_counter += 1
 
+            # finish waiting after getting 10 status reports
             if idle_counter > 10:
                 break
     return
@@ -140,28 +154,43 @@ def wait_for_movement_completion(ser,line):
 
 def stream_gcode(port, gcode_path):
     """
-    TODO: Add docstring
+    Streaming gcode line by line through serial communication to grbl.
+
+    Args:
+        port: A string represnting the COM port for serial communication.
+        gcode_path: A string representing the file path for where
+        to save the gcode file. 
     """
 
+    # create serial port object
     ser = serial.Serial(port, BAUD_RATE)
     #send_wake_up(ser)
 
+    # open generated gcode read all lines
     with open(gcode_path, "r") as file:
         lines = file.readlines()
 
+    # clean up each line and display what the line is
     for raw_line in lines:
         line = raw_line.strip()
         print("Sending gcode: " + line)
 
         # converts string to byte encoded string and append newline
         command = str.encode(line + '\n')
-        ser.write(command)  # Send g-code
 
+        # Send g-code to grbl
+        ser.write(command)  
+
+        # wait for the line's command to execute and check status
         wait_for_movement_completion(ser,line)
 
-        grbl_out = ser.readline()  # Wait for response with carriage return
+        # get grbl response line that ends with carriage return
+        grbl_out = ser.readline() 
+
+        # decode and display grbl response
         print(" : " , grbl_out.strip().decode('utf-8'))
 
+    # end of all lines in gcode file
     print('End of gcode')
 
 
@@ -177,12 +206,20 @@ def run_grbl(port, gcode_path, features):
         features: A list of floats representing the audio features of the
             song obtained from the spotify api.
     """
+    # display input port name, gcode file name, and features chosen
     print("USB Port: ", port)
     print("Gcode file: ", gcode_path)
     print("Features: ", features)
+
+    # generate spiral points positions and colors list
     x, y, colors = get_spiral_positions(features)
+
+    # generate gcode file
     write_gcode(x, y, colors, gcode_path)
+    
+    # stream gcode to grbl
     # stream_gcode(port, gcode_path)
+
     print(colors)
     print("Done")
 
