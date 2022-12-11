@@ -11,7 +11,7 @@ SCALE = 325 # 325 mm is the size of drawing area and steps are in mm
 def norm(v):
     return math.sqrt(sum(e**2 for e in v))
 
-def draw(Ri, Ro, q, tmax=100, N=1000):
+def draw(Ri, Ro, q, tmax=100, N=100):
     Ro, Ri = max(Ri, Ro), min(Ri, Ro)
     p = (Ro - Ri) / 2
     q = (Ro - p) * q + p

@@ -56,12 +56,12 @@ def get_spiral_positions(audio_features):
 
     # get relative position of each point by subtarcting previous position for gcode
     # normalize the points and then scale for the rage of drawing area
-    x_positions = [167.5 * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
-    y_positions = [167.5 * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
+    x_positions = [107.5 * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
+    y_positions = [107.5 * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
 
     # seperate into three lists so there is one list per spiral for later color changing
-    x_positions = [x_positions[0:1000], x_positions[1000:2000], x_positions[2000:3000]]
-    y_positions = [y_positions[0:1000], y_positions[1000:2000], y_positions[2000:3000]]
+    x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
+    y_positions = [y_positions[0:100], y_positions[100:200], y_positions[200:300]]
     
     return x_positions, y_positions, colors
 
@@ -88,13 +88,13 @@ def write_gcode(x_positions, y_positions, colors, write_filename):
         for i in range(len(x_positions)):
             # for the current spiral, write the movement needed for desired color
             z = colors[i]
-            f.write(f"G01 Z{z} F100\n")
+            f.write(f"G01 Z{z} F1000\n")
 
             # loop through each position in each spiral and write required movement to file
             for j in range(len(x_positions[i])):
                 x = x_positions[i][j]
                 y = y_positions[i][j]
-                f.write(f"G01 X{x} Y{y} F100\n")
+                f.write(f"G01 X{x} Y{y} F1000\n")
 
 
 def send_wake_up(ser):
@@ -185,3 +185,5 @@ def run_grbl(port, gcode_path, features):
     # stream_gcode(port, gcode_path)
     print(colors)
     print("Done")
+
+# stream_gcode("COM5", "gcode_files\test_y.gcode")
