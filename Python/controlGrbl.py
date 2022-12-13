@@ -56,8 +56,10 @@ def get_spiral_positions(audio_features):
 
     # get relative position of each point by subtarcting previous position for gcode
     # normalize the points and then scale for the rage of drawing area
-    x_positions = [107.5 * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
-    y_positions = [107.5 * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
+    # use 107.5 as scale to maximize size; 56 for speed
+    scale = 107.5
+    x_positions = [scale * (x_positions[i] - x_positions[i-1]) / max(x_positions) for i in range(1, len(x_positions))]
+    y_positions = [scale * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
 
     # seperate into three lists so there is one list per spiral for later color changing
     x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
