@@ -7,22 +7,22 @@ Add description
 
 ### Local Setup
 1. Clone the repository.
-    `git clone `
+    `git clone https://github.com/lilibaker/music-visualizer-pie.git`
 2. Navigate to the local repository using your terminal.
-    ex: `cd `
+    ex: `cd music-visualizer-pie`
 3. Install the dependencies listed below if they are not already installed.
 
 ### Dependencies
 This project relies upon the following dependencies:
 **CHANGE**
-* Pandas
-    * `pip install pandas`
-* Matplotlib
-    * `pip install matplotlib`
-* NumPy
-    * `pip install numpy`
-* Requests
-    * `pip install requests`
+* PyAudio
+    * `pip install pyaudio`
+* Pyserial
+    * `pip install pyserial`
+* Spotipy
+    * `pip install spotipy`
+* Ttkthemes
+    * `pip install ttkthemes`
 
 ### Executing program
 
