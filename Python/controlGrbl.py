@@ -62,8 +62,12 @@ def get_spiral_positions(audio_features):
     y_positions = [scale * (y_positions[i] - y_positions[i-1]) / max(y_positions) for i in range(1, len(y_positions))]
 
     # seperate into three lists so there is one list per spiral for later color changing
-    x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
-    y_positions = [y_positions[0:100], y_positions[100:200], y_positions[200:300]]
+    # for less points uncomment this code
+    x_positions = [x_positions[0:50], x_positions[50:100], x_positions[100:150]]
+    y_positions = [y_positions[0:50], y_positions[50:100], y_positions[100:150]]
+    # for more points, uncomment this code
+    # x_positions = [x_positions[0:100], x_positions[100:200], x_positions[200:300]]
+    # y_positions = [y_positions[0:100], y_positions[100:200], y_positions[200:300]]
     
     return x_positions, y_positions, colors
 

@@ -7,7 +7,7 @@ def norm(v):
     """
     return math.sqrt(sum(e**2 for e in v))
 
-def draw(Ri, Ro, q, tmax=100, N=100):
+def draw(Ri, Ro, q, tmax=100, N=50):
     """
     Return the points for a single Spirograph with inner radius Ri and outer
     radius Ro. q determines the complexity of the pattern (in a somewhat
