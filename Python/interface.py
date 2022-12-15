@@ -3,7 +3,6 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import prerecorded
 import controlGrbl
 
 # define spotify credentials

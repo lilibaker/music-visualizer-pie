@@ -1,6 +1,4 @@
 import serial
-import time
-import sys
 from threading import Event
 import prerecorded
 
