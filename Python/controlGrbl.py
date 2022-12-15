@@ -103,18 +103,6 @@ def write_gcode(x_positions, y_positions, colors, write_filename):
                 f.write(f"G01 X{x} Y{y} F1000\n")
 
 
-'''def send_wake_up(ser):
-    """
-    (This function is not being called)
-    """
-    # Wake up
-    # Hit enter a few times to wake the Printrbot
-    print("writing enter")
-    ser.write(str.encode("\r\n\r\n"))
-    time.sleep(2)   # Wait for Printrbot to initialize
-    ser.flushInput()  # Flush startup text in serial input'''
-
-
 def wait_for_movement_completion(ser,line):
     """
     Wait for position command line to run while constantly checking status.
@@ -170,7 +158,6 @@ def stream_gcode(port, gcode_path):
 
     # create serial port object
     ser = serial.Serial(port, BAUD_RATE)
-    #send_wake_up(ser)
 
     # open generated gcode read all lines
     with open(gcode_path, "r") as file:
@@ -224,9 +211,6 @@ def run_grbl(port, gcode_path, features):
     write_gcode(x, y, colors, gcode_path)
     
     # stream gcode to grbl
-    # stream_gcode(port, gcode_path)
+    stream_gcode(port, gcode_path)
 
-    print(colors)
     print("Done")
-
-# stream_gcode("COM5", "gcode_files\test_y.gcode")
