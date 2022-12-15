@@ -15,13 +15,13 @@ The goal for this project was to use an xy-gantry and produce distinct art based
 3. Install the dependencies listed below if they are not already installed.
 
 ### Dependencies
+To install all the required dependencies, enter the following line in your terminal: <br>
+`pip install -r requirements.txt`
+
 This project relies upon the following dependencies:
 * Pyserial
-    * `pip install pyserial`
 * Spotipy
-    * `pip install spotipy`
 * Ttkthemes
-    * `pip install ttkthemes`
 
 ### Executing program
 To run this program, connect the laptop to a CNC motorshield as defined on our website. Then type `python3 interface.py` in the command line. The user interface should appear with directions for generating the spirographs.
