@@ -23,9 +23,9 @@ This project relies upon the following dependencies:
 * Spotipy
 * Ttkthemes
 
-### Executing program
+## Executing program
 To run this program, connect the laptop to a CNC motorshield as defined on our website. Then navigate to the Python folder by typing `cd Python` and type `python3 interface.py` in the command line. The user interface should appear with directions for generating the spirographs.
 
 
-### Authors
+## Authors
 Lili Baker, Anthony Costarelli, Jiayuan Liu, Malvina Clavering, and Stephanie Cho
