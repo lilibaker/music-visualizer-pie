@@ -1,5 +1,6 @@
 # music-visualizer-pie
 *A way to visualize music*
+*** Check out our website: https://olincollege.github.io/pie-2022-03/dancing-degas/***
 
 ## Description
 The goal for this project was to use an xy-gantry and produce distinct art based on song input. To fulfill this goal, we developed a simple user interface using Tkinter. We then used the Spotify Web API to collect data on the songs chosen by the users. These values were used to generate points for three concentric spirographs, and the points were then sent to the CNC motorshield to control the gantry system.
